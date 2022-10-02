@@ -1,0 +1,1 @@
+Takes POST requests with a corpus of something expressing an opinion, positive, negatice or anything in between and decides the general sentiment behind it. The client will receive a response with that sentiment, it's confidence in the assessment along with other details

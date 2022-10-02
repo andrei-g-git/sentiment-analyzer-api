@@ -1,5 +1,6 @@
 from tkinter import Tk, Canvas, Label
 import threading
+from server import AnalyzerServer
 
 root = Tk()
 
@@ -14,10 +15,7 @@ port = "123"
 running_label = Label(root, text="running on port " + port + " ...")
 running_label.grid(column=1, row=1)
 
-def delete_this(arg1):
-    print("seriously, delete it")
-
-thread_2 = threading.Thread(target=delete_this, args=(345))
+thread_2 = threading.Thread(target=AnalyzerServer.init_server, args=("localhost", 9999))
 thread_2.start()
 
 root.mainloop()

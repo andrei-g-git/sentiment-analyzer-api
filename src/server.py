@@ -1,13 +1,15 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
 class AnalyzerServer(BaseHTTPRequestHandler):
-    def do_POST(self):
-        print("awefaew")
-
+    
     def do_GET(self):
         self.handle_post_headers("/test")
         print("prepare to send response")
-        self.wfile.write(bytes("request received", "utf8"))
+        self.wfile.write(bytes("request received", encoding="utf8"))
+
+    def do_POST(self):
+        self.handle_post_headers("/analyze")
+        self.wfile.write(bytes("that's gay not that there's something wrong with it", "utf8"))
 
     def handle_post_headers(self, path):
         self.send_response(200)

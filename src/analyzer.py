@@ -8,15 +8,17 @@ from sklearn.metrics import accuracy_score
 from sklearn.base import TransformerMixin 
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
+from sklearn.model_selection import train_test_split
 from utils import Utils #there;s no need for this kind of coupling ...
-
-class Analyzer(TransformerMixin):
+class Analyzer():
 
     def __init__(self):
         self.frames = []
         self.df = None
         self.nlp = spacy.load("en_core_web_sm") #default
         self.utils = None
+        self.pipe = None
+        #self.predictors = None
 
     def set_frames(self, *args):
         self.frames = [arg for arg in args]
@@ -31,6 +33,9 @@ class Analyzer(TransformerMixin):
 
     def set_utils(self, utils_object):
         self.utils = utils_object
+
+    # def set_predictors(self, predictors):
+    #     self.predictors = predictors
 
     def df_to_csv(self, relative_path): #this doesn't need to be here...
         #ut = Utils()
@@ -47,13 +52,21 @@ class Analyzer(TransformerMixin):
 
         return tokens    
 
-    #couple of overrides I think...
-    def transform(self, X, **transform_params):
-        return [self.utils.strip_and_lower(text) for text in X]
+    def create_scikit_pipelines(self, predictors):
+        vectorizer = CountVectorizer(tokenizer = self.tokenize_without_stopwords, ngram_range=(1,1)) 
+        classifier = LinearSVC()
+        self.pipe = Pipeline([               
+            ("cleaner", predictors),
+            ('vectorizer', vectorizer),
+            ('classifier', classifier)   
+        ])
 
-    def fit(self, X, y=None, **fit_params):
-        return self
+    def train_test_split(self, test_ratio=0.2, random_state=30):
+        X = self.df['Message']
+        ylabels = self.df['Target']
+        X_train, X_test, y_train, y_test = train_test_split(X, ylabels, test_size=test_ratio, random_state=random_state)      
 
-    def get_params(self, deep=True):
-        return {}
+        self.pipe.fit(X_train, y_train) 
 
+        return X_train, X_test, y_train, y_test
+        

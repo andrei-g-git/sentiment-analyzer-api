@@ -9,3 +9,6 @@ class Utils:
             os.path.dirname(__file__), 
             relative_path
         )
+
+    def strip_and_lower(self, text):     
+        return text.strip().lower()        

@@ -12,7 +12,9 @@ an.set_frames(
 )
 
 an.set_df_with_keys('Yelp','IMDB','Amazon')
+an.set_utils(Utils()) #still not great but better than hard coding...
 
 #an.df_to_csv("assets/data/sentimentdataset.csv")
 
-an.remove_stopwords()
+tokens = an.tokenize_without_stopwords("This is how John Walker was walking. He was also running beside the lawn.")
+print(tokens)

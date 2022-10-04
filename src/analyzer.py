@@ -47,7 +47,7 @@ class Analyzer():
     def tokenize_without_stopwords(self, corpus):
         stop_words = list(STOP_WORDS)
         doc = self.nlp(corpus)
-        tokens = [token.lemma_.lower().strip() if token.lemma_ != "-PRON-" else token.lower_ for token in doc] 
+        tokens = [token.lemma_.lower().strip() if token.lemma_ != "-PRON-" else token.lower_ for token in doc] #it think this return strings, not tokens (the first expression might stringify)
         tokens = [token for token in tokens if token not in stop_words and token not in string.punctuation]
 
         return tokens    

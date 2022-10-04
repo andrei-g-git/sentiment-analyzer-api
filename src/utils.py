@@ -11,4 +11,10 @@ class Utils:
         )
 
     def strip_and_lower(self, text):     
-        return text.strip().lower()        
+        return text.strip().lower()     
+
+    # def scale_number(self, value, old_min, old_max, new_min, new_max):
+    #     return (new_max - new_min) * (value - old_min) / (old_max - old_min) + new_max   
+
+    def scale_number(self, value, min, max, scaledMin, scaledMax):
+        return (scaledMax-scaledMin)*(value-min)/(max-min)+scaledMin

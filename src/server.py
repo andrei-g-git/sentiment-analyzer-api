@@ -1,7 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import socketserver
 import pandas as pd
-from analyzer import Analyzer 
+from analyzer_textblob import Analyzer 
 from utils import Utils 
 from predictor import Predictors
 import json
@@ -31,7 +31,8 @@ def init_analyzer():
 
     return an
 
-analyzer = init_analyzer()
+#analyzer = init_analyzer() #can't see another way to achieve this...
+analyzer = Analyzer()
 class AnalyzerServer(BaseHTTPRequestHandler):
     
     def do_GET(self):
@@ -46,13 +47,32 @@ class AnalyzerServer(BaseHTTPRequestHandler):
         body = api.load_request_body(self) 
         text = body["text"]
 
-        #predictionArray = self.pipe.predict([text])
-        predictionArray = analyzer.pipe.predict([text])
-        #print("ARRAY ++++++ ", predictionArray[0])
-        response = "good"
-        if predictionArray[0] == 0: 
-            response = "bad"
+        #predictionArray = analyzer.pipe.predict([text])
+        polarity, subjectivity = analyzer.process_sentiment_advanced(text)
 
+        sentiment = "neutral"
+        #range change from -1,1 to 1,3
+        #convert range as analog to 1, 5
+        
+        new_polarity = polarity + 2
+        old_range_span = 2
+        new_range_span = 5 - 1
+        #multiplier = new_range_span / old_range_span
+        #score = new_polarity * multiplier
+        ut = Utils()
+        score = ut.scale_number(polarity, -1, 1, 1, 5)
+
+        if polarity > 0.2: 
+            sentiment = "positive"
+        elif polarity < -0.2:
+            sentiment = "negative"
+
+        data = {
+            "score": score,
+            "sentiment": sentiment,
+            "subjectivity": subjectivity
+        }
+        response = json.dumps(data)
         self.wfile.write(bytes(response, "utf8"))
 
     def set_pipe(self, pipe):
@@ -75,28 +95,3 @@ class AnalyzerServer(BaseHTTPRequestHandler):
         
         return "Server running at ", HOST, "  on port ", PORT      
 
-    # def init_analyzer(self):
-    #     print("initializing analyzer")
-    #     an = Analyzer()
-    #     ut = Utils()
-    #     an.set_frames(
-    #         pd.read_table(ut.get_valid_path("assets/data/yelp_labelled.txt")),
-    #         pd.read_table(ut.get_valid_path("assets/data/imdb_labelled.txt")),
-    #         pd.read_table(ut.get_valid_path("assets/data/amazon_cells_labelled.txt"))
-    #     )
-
-    #     an.set_df_with_keys('Yelp','IMDB','Amazon')
-    #     an.set_utils(ut)
-
-    #     predictors = Predictors()
-    #     predictors.set_utils(ut)
-
-    #     an.create_scikit_pipelines(predictors)
-
-    #     X_train, X_test, y_train, y_test = an.train_test_split(random_state=42)
-
-    #     #self.set_pipe(an.pipe)
-
-    #     print("analyzer initialized")
-
-    #     return an

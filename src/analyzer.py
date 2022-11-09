@@ -5,7 +5,7 @@ from spacy.lang.en.stop_words import STOP_WORDS
 import string
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 from sklearn.metrics import accuracy_score 
-from sklearn.base import TransformerMixin 
+#from sklearn.base import TransformerMixin 
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import train_test_split

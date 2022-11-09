@@ -24,3 +24,9 @@ class Analyzer:
         subjectivity = blob.subjectivity
         #Sintensity = blob.inte
         return polarity, subjectivity        
+
+
+
+
+
+

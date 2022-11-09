@@ -61,7 +61,7 @@ class Analyzer():
             ('classifier', classifier)   
         ])
 
-    def train_test_split(self, test_ratio=0.2, random_state=30):
+    def train_test_split_mine(self, test_ratio=0.2, random_state=30):
         X = self.df['Message']
         ylabels = self.df['Target']
         X_train, X_test, y_train, y_test = train_test_split(X, ylabels, test_size=test_ratio, random_state=random_state)      

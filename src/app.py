@@ -11,7 +11,7 @@ canvas = Canvas(
 )
 canvas.grid(columnspan=3, rowspan=3)
 
-port = "123"
+port = "9999"
 running_label = Label(root, text="running on port " + port + " ...")
 running_label.grid(column=1, row=1)
 

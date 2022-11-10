@@ -1,7 +1,7 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import socketserver
 import pandas as pd
-from analyzer_textblob import Analyzer 
+from analyzer_new import Analyzer 
 from utils import Utils 
 from predictor import Predictors
 import json
@@ -67,10 +67,19 @@ class AnalyzerServer(BaseHTTPRequestHandler):
         elif polarity < -0.2:
             sentiment = "negative"
 
+        #########################
+        analyzer.generate_emotions_object(text)
+        affection_dictionary = analyzer.get_affection_dictionary()
+        top_emotions = analyzer.get_top_emotions()
+        emotion_scores = analyzer.get_emotion_scores()
+        affection_frequencies = analyzer.get_affection_frequencies()
+
+
         data = {
             "score": score,
             "sentiment": sentiment,
-            "subjectivity": subjectivity
+            "subjectivity": subjectivity,
+            "emotions": affection_frequencies
         }
         response = json.dumps(data)
         self.wfile.write(bytes(response, "utf8"))

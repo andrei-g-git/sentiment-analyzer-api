@@ -73,7 +73,14 @@ class AnalyzerServer(BaseHTTPRequestHandler):
         top_emotions = analyzer.get_top_emotions()
         emotion_scores = analyzer.get_emotion_scores()
         affection_frequencies = analyzer.get_affection_frequencies()
+        
+        print("SCORES::::  ", emotion_scores)
+        print("DICT----- ", affection_dictionary)
+        print("FREQUENCIES:    :      :    ", affection_frequencies)
 
+        #############################################
+        #analyzer.add_negex_pipe()   --- makes no sense to keep adding pipelines here on every post request
+        print("---Spacy Emotions with negex:\n     ", analyzer.get_goemotions(text))#[ emotion_with_negation["emotion"] for emotion_with_negation in analyzer.get_goemotions(text)])
 
         data = {
             "score": score,

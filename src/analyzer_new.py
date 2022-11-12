@@ -7,12 +7,16 @@ from textblob import TextBlob
 from nrclex import NRCLex
 import numpy as np
 import pandas as pd
+from negspacy.negation import Negex
 
 class Analyzer:
 
     def __init__(self):
         self.nlp = spacy.load("en_core_web_sm") #default
         self.emotions_object = None
+        self.emotions_spacy_model = spacy.load("en_textcat_goemotions") #default
+        self.emotions_spacy_model.add_pipe("sentencizer")
+        self.add_negex_pipe()
 
     def set_language(self, module_name):
         self.nlp = spacy.load(module_name)
@@ -49,13 +53,67 @@ class Analyzer:
         return self.emotions_object.affect_dict
 
     def get_top_emotions(self):
-        return self.top_emotions
+        return self.emotions_object.top_emotions
 
     def get_emotion_scores(self):
-            return self.raw_emotion_scores
+            return self.emotions_object.raw_emotion_scores
 
     def get_affection_frequencies(self):
-            return self.affect_frequencies           
+            return self.emotions_object.affect_frequencies          
+
+    def add_negex_pipe(self):
+        nlp = self.emotions_spacy_model
+        nlp.add_pipe("negex", config={
+            "ent_types":[
+                "admiration",
+                "amusement",
+                "anger",
+                "annoyance",
+                "approval",
+                "caring",
+                "confusion",
+                "curiosity",
+                "desire",
+                "disappointment",
+                "disapproval",
+                "disgust",
+                "embarrassment",
+                "excitement",
+                "fear",
+                "gratitude",
+                "grief",
+                "joy",
+                "love",
+                "nervousness",
+                "optimism",
+                "pride",
+                "realization",
+                "relief",
+                "remorse",
+                "sadness",
+                "surprise",
+                "neutral"                
+            ]
+        })
+        print("PIPELINES^^^^^^^^^^^^   \n", nlp.pipe_names)
+
+    # def getEmotionWithNegation(entity):
+    #     return {
+    #         emotion: entity.text,
+    #         negation: entity._.negex
+    #     }
+
+    def get_goemotions(self, corpus):
+        nlp = self.emotions_spacy_model
+        doc = nlp(corpus)
+        print("tesssttttttt==================================  ", [sent for sent in doc.sents])
+        return [ 
+            {
+                "emotion": ent.text,
+                "negation": ent._.negex
+            }
+            for ent in doc.ents
+        ]
 
 
 

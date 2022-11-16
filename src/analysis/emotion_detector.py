@@ -8,4 +8,11 @@ class Emotion_detector:
         self.emotion_model = pipeline("text-classification", model="arpanghoshal/EmoRoBERTa", return_all_scores=True)
 
     def assess_emotions(self, corpus):
-        return self.emotion_model(corpus)
+        rawResults = self.emotion_model(corpus)
+        #return {k: v for dict in rawResults[0] for k, v in dict.items()} #{label: score for label, score in rawResults[0]}
+        resutlsList = rawResults[0]
+        emotionsDict = {}
+        for dict in resutlsList:
+            emotionsDict[dict["label"]] = dict["score"]
+
+        return emotionsDict

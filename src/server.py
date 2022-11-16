@@ -6,7 +6,10 @@ from utils import Utils
 from predictor import Predictors
 import json
 from api_handlers import ApiHandler as API
-from analysis.emotion_detector_test import Emotion_detector_test
+#from analysis.emotion_detector_test import Emotion_detector_test
+from analysis.analyzer import Analyzer as RealAnalyzer
+from analysis.emotion_detector import Emotion_detector
+
 
 def init_analyzer():
     print("initializing analyzer")
@@ -86,8 +89,9 @@ class AnalyzerServer(BaseHTTPRequestHandler):
 
         ########
         # BERT
-        detector = Emotion_detector_test()
-        emotions = detector.test_emotions(text)
+        anal = RealAnalyzer()
+        anal.set_emotion_detector(Emotion_detector())
+        emotions = anal.assess_emotions(text)
         print("######### EMOTIONS WITH ROBERTA ######### \n ", emotions, " \n ########################################")
 
         data = {

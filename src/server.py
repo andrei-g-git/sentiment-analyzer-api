@@ -6,6 +6,7 @@ from utils import Utils
 from predictor import Predictors
 import json
 from api_handlers import ApiHandler as API
+from analysis.emotion_detector_test import Emotion_detector_test
 
 def init_analyzer():
     print("initializing analyzer")
@@ -81,6 +82,13 @@ class AnalyzerServer(BaseHTTPRequestHandler):
         #############################################
         #analyzer.add_negex_pipe()   --- makes no sense to keep adding pipelines here on every post request
         print("---Spacy Emotions with negex:\n     ", analyzer.get_goemotions(text))#[ emotion_with_negation["emotion"] for emotion_with_negation in analyzer.get_goemotions(text)])
+
+
+        ########
+        # BERT
+        detector = Emotion_detector_test()
+        emotions = detector.test_emotions(text)
+        print("######### EMOTIONS WITH ROBERTA ######### \n ", emotions, " \n ########################################")
 
         data = {
             "score": score,

@@ -98,7 +98,7 @@ class AnalyzerServer(BaseHTTPRequestHandler):
             "score": score,
             "sentiment": sentiment,
             "subjectivity": subjectivity,
-            "emotions": affection_frequencies
+            "emotions": emotions #affection_frequencies
         }
         response = json.dumps(data)
         self.wfile.write(bytes(response, "utf8"))

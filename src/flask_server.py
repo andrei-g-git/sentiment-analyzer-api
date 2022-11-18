@@ -1,13 +1,14 @@
-from flask import Flask, make_response, request
+from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
 import json
 from analysis.analyzer import Analyzer as RealAnalyzer
 from analysis.sentiment_analyzer_textblob import Sentiment_analyzer_textblob as Sentiment_analyzer
 from analysis.emotion_detector import Emotion_detector
+from utils import Utils
 
 an = RealAnalyzer()
-#an.set_sentiment_analyzer(Sentiment_analyzer())
-#an.set_emotion_detector(Emotion_detector())
+an.set_sentiment_analyzer(Sentiment_analyzer())
+an.set_emotion_detector(Emotion_detector())
 
 app = Flask(__name__)
 CORS(app)
@@ -23,15 +24,30 @@ def post_sentiment_and_emotions():
             .decode("utf-8"),
         strict=False
     )  
-
-    #data_object = json.loads(data, strict=False)
     print("DATA:   " + data["text"])
 
+    corpus = data["text"]
 
-    response = make_response("here's the general sentiment and emotions object")
+    polarity, subjectivity = an.analyze_sentiment(corpus)
+    sentiment = "neutral"
+    if polarity > 0.2: 
+        sentiment = "positive"
+    elif polarity < -0.2:
+        sentiment = "negative"
 
-    #response.headers.add('Access-Control-Allow-Origin', '*')
-    #response.headers.add("Content-Type", "application/json; charset=utf-8")
+    ut = Utils()
+    score = ut.scale_number(polarity, -1, 1, 1, 5)
+
+    emotions = an.assess_emotions(corpus)
+
+    response_data = {
+        "score": score,
+        "sentiment": sentiment,
+        "subjectivity": subjectivity,
+        "emotions": emotions
+    }
+
+    response = make_response(jsonify(response_data))
 
     return response
 

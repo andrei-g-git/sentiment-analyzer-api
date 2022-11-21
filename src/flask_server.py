@@ -1,5 +1,6 @@
 from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
+import git
 import json
 from analysis.analyzer import Analyzer as RealAnalyzer
 from analysis.sentiment_analyzer_textblob import Sentiment_analyzer_textblob as Sentiment_analyzer
@@ -14,6 +15,14 @@ app = Flask(__name__)
 CORS(app)
 
 app.debug = True
+
+@app.route("/git_push", methods=["POST"])
+def webhook():
+    repo = git.Repo(".", search_parent_directories=True)
+    origin = repo.remotes.origin
+    origin.pull()
+    return 'Updated PythonAnywhere successfully', 200
+
 
 @app.route("/analyze", methods=["POST"])
 def post_sentiment_and_emotions():
@@ -52,4 +61,5 @@ def post_sentiment_and_emotions():
     return response
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=5000)    
+    app.run(host="localhost", port=5000)   
+    #app.run(host="192.168.42.206", port=5000)  

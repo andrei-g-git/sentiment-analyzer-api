@@ -16,13 +16,18 @@ CORS(app)
 
 app.debug = True
 
-@app.route("/git_push", methods=["POST"])
-def webhook():
-    repo = git.Repo(".", search_parent_directories=True)
-    origin = repo.remotes.origin
-    origin.pull()
-    return 'Updated PythonAnywhere successfully', 200
+# @app.route("/git_push", methods=["POST"])
+# def webhook():
+#     repo = git.Repo(".", search_parent_directories=True)
+#     origin = repo.remotes.origin
+#     origin.pull()
+#     return 'Updated PythonAnywhere successfully', 200
 
+@app.route("/")
+def welcome():
+    return "Welcome!"
+if __name__ == "__main__":
+    app.run() #don't know if I need this route...
 
 @app.route("/analyze", methods=["POST"])
 def post_sentiment_and_emotions():

@@ -1,7 +1,6 @@
 from flask import Flask, make_response, request, jsonify
 from flask_cors import CORS
-import git
-import json
+import git, json, time
 from analysis.analyzer import Analyzer as RealAnalyzer
 from analysis.sentiment_analyzer_textblob import Sentiment_analyzer_textblob as Sentiment_analyzer
 from analysis.emotion_detector import Emotion_detector
@@ -23,11 +22,11 @@ app.debug = True
 #     origin.pull()
 #     return 'Updated PythonAnywhere successfully', 200
 
-@app.route("/")
-def welcome():
-    return "Welcome!"
-if __name__ == "__main__":
-    app.run() #don't know if I need this route...
+# @app.route("/")
+# def welcome():
+#     return "Welcome!"
+# if __name__ == "__main__":
+#     app.run() #don't know if I need this route...
 
 @app.route("/analyze", methods=["POST"])
 def post_sentiment_and_emotions():
@@ -62,6 +61,8 @@ def post_sentiment_and_emotions():
     }
 
     response = make_response(jsonify(response_data))
+
+    time.sleep(2) # I have a fancy loading screen on my client and this thing processes the request too fast to see it
 
     return response
 

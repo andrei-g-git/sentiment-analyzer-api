@@ -22,9 +22,9 @@ app.debug = True
 #     origin.pull()
 #     return 'Updated PythonAnywhere successfully', 200
 
-# @app.route("/")
-# def welcome():
-#     return "Welcome!"
+@app.route("/")
+def welcome():
+    return "Welcomeeeeeee!"
 # if __name__ == "__main__":
 #     app.run() #don't know if I need this route...
 
@@ -67,5 +67,6 @@ def post_sentiment_and_emotions():
     return response
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=5000)   
+    #app.run(host="localhost", port=5000)   
     #app.run(host="192.168.42.206", port=5000)  
+    app.run(host="192.168.42.206", port=80)
